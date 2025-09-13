@@ -4,6 +4,7 @@ package com.rohit.springbootwebtutorialweek2.springbootwebtutorialweek2.controll
 import com.rohit.springbootwebtutorialweek2.springbootwebtutorialweek2.dto.EmployeeDTO;
 import com.rohit.springbootwebtutorialweek2.springbootwebtutorialweek2.entities.EmployeeEntity;
 import com.rohit.springbootwebtutorialweek2.springbootwebtutorialweek2.repositories.EmployeeRepository;
+import com.rohit.springbootwebtutorialweek2.springbootwebtutorialweek2.services.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -19,27 +20,27 @@ public class EmployeeController {
         return "Secret message: Hey how are you";
     }
 
-    private final EmployeeRepository employeeRepository;
+    private final EmployeeService employeeService;
 
-    public EmployeeController(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
     @GetMapping(path = "/{employeeId}")
-    public EmployeeEntity getEmployeeById(@PathVariable(name = "employeeId") Long id){
+    public EmployeeDTO getEmployeeById(@PathVariable(name = "employeeId") Long id){
         // name field in PathVariable we can change the original name of field whatever we want
-        return employeeRepository.findById(id).orElse(null);
+        return employeeService.getEmployeeById(id);
     }
 
     @GetMapping
-    public List<EmployeeEntity> getAllEmployees(@RequestParam(required = false, name = "inputAge") Integer age, @RequestParam(required = false) String sortBy){
+    public List<EmployeeDTO> getAllEmployees(@RequestParam(required = false, name = "inputAge") Integer age, @RequestParam(required = false) String sortBy){
         // in RequestParams if required is false the field can be neglected
-        return employeeRepository.findAll();
+        return employeeService.getAllEmployees();
     }
 
     @PostMapping
-    public EmployeeEntity createNewEmployee (@RequestBody EmployeeEntity inputEmployee){
-        return employeeRepository.save(inputEmployee);
+    public EmployeeDTO createNewEmployee (@RequestBody EmployeeDTO inputEmployee){
+        return employeeService.createNewEmployee(inputEmployee);
     }
 
     @PutMapping
